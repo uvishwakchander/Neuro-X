@@ -52,7 +52,7 @@ NeuroX prioritized plan:
 
 ## Static Web MVP (NeuroX Front-End)
 
-A lightweight static MVP is available in `neurox/` and runs without any backend. It includes full games plus two small quick-play games (Speed Tap and Quick Match).
+A lightweight static MVP is available in `neurox/` and runs without any backend.
 
 ### Folder Structure
 
@@ -65,8 +65,6 @@ neurox/
     focus-game.js
     memory-game.js
     pattern-game.js
-    small-tap-game.js
-    small-match-game.js
   components/
     navbar.js
     dashboard.js
@@ -78,25 +76,7 @@ neurox/
 
 ### Run Locally
 
-Option 1 (quick): open `neurox/index.html` directly in your browser.
-
-Option 2 (recommended for module loading consistency):
-
-```bash
-python -m http.server 4173 --directory .
-```
-
-Then visit: `http://localhost:4173/neurox/index.html`
-
-
-### Step-by-step working demo
-
-For a presenter script that walks through every feature and expected outputs, see:
-
-- `neurox/WORKING_DEMO.md`
-
-- `neurox/PREVIEW_CHECK.md` (latest preview/error-check record)
-
+Open `neurox/index.html` directly in your browser.
 
 ### Deploy to GitHub Pages
 
