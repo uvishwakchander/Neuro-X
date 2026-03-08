@@ -6,6 +6,8 @@ import { renderForum } from "./forum/forum.js";
 import { mountFocusGame } from "./games/focus-game.js";
 import { mountMemoryGame } from "./games/memory-game.js";
 import { mountPatternGame } from "./games/pattern-game.js";
+import { mountSmallTapGame } from "./games/small-tap-game.js";
+import { mountSmallMatchGame } from "./games/small-match-game.js";
 
 const store = {
   get(key, fallback) {
