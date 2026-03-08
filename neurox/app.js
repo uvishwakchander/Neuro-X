@@ -6,8 +6,6 @@ import { renderForum } from "./forum/forum.js";
 import { mountFocusGame } from "./games/focus-game.js";
 import { mountMemoryGame } from "./games/memory-game.js";
 import { mountPatternGame } from "./games/pattern-game.js";
-import { mountSmallTapGame } from "./games/small-tap-game.js";
-import { mountSmallMatchGame } from "./games/small-match-game.js";
 
 const store = {
   get(key, fallback) {
@@ -104,8 +102,6 @@ function initGames() {
   document.getElementById("focus-tab").addEventListener("click", () => mountFocusGame(root, saveScore));
   document.getElementById("memory-tab").addEventListener("click", () => mountMemoryGame(root, saveScore));
   document.getElementById("pattern-tab").addEventListener("click", () => mountPatternGame(root, saveScore));
-  document.getElementById("small-tap-tab").addEventListener("click", () => mountSmallTapGame(root, saveScore));
-  document.getElementById("small-match-tab").addEventListener("click", () => mountSmallMatchGame(root, saveScore));
 
   mountFocusGame(root, saveScore);
 }
