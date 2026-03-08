@@ -49,3 +49,61 @@ NeuroX prioritized plan:
 2. Send standup update (urgency=3, estimate=10m, score=7.47)
 3. Prepare board report (urgency=5, estimate=75m, score=6.75)
 ```
+
+## Static Web MVP (NeuroX Front-End)
+
+A lightweight static MVP is available in `neurox/` and runs without any backend. It includes full games plus two small quick-play games (Speed Tap and Quick Match).
+
+### Folder Structure
+
+```text
+neurox/
+  index.html
+  styles.css
+  app.js
+  games/
+    focus-game.js
+    memory-game.js
+    pattern-game.js
+    small-tap-game.js
+    small-match-game.js
+  components/
+    navbar.js
+    dashboard.js
+    reminders.js
+    ai-chat.js
+  forum/
+    forum.js
+```
+
+### Run Locally
+
+Option 1 (quick): open `neurox/index.html` directly in your browser.
+
+Option 2 (recommended for module loading consistency):
+
+```bash
+python -m http.server 4173 --directory .
+```
+
+Then visit: `http://localhost:4173/neurox/index.html`
+
+
+### Step-by-step working demo
+
+For a presenter script that walks through every feature and expected outputs, see:
+
+- `neurox/WORKING_DEMO.md`
+
+- `neurox/PREVIEW_CHECK.md` (latest preview/error-check record)
+
+
+### Deploy to GitHub Pages
+
+1. Push this repository to GitHub.
+2. In GitHub, go to **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
+4. Select your branch (e.g. `main`) and set folder to `/ (root)`.
+5. Save, then access `https://<your-username>.github.io/<repo-name>/neurox/`.
+
+The app stores all MVP data in browser LocalStorage, so no backend services are required.
