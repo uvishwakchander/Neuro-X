@@ -5,21 +5,12 @@ export function mountMemoryGame(container, onSaveScore) {
   let userInput = [];
   let round = 0;
   let acceptingInput = false;
-  let lives = 3;
-  let speed = 600;
 
   container.innerHTML = `
     <h3>Memory Game</h3>
     <p>Watch the sequence, then repeat it in order.</p>
-    <div class="input-row">
-      <select id="memory-difficulty">
-        <option value="650">Calm (slow)</option>
-        <option value="500">Classic</option>
-        <option value="380">Fast</option>
-      </select>
-      <button id="start-memory" class="btn primary">Start Memory Game</button>
-    </div>
-    <p>Round: <span id="memory-round">0</span> | Lives: <span id="memory-lives">3</span></p>
+    <button id="start-memory" class="btn primary">Start Memory Game</button>
+    <p>Round: <span id="memory-round">0</span></p>
     <p id="memory-status" class="subtle">Press start to begin.</p>
     <div id="memory-seq" class="sequence-row"></div>
     <h4>Choose symbols</h4>
@@ -29,28 +20,24 @@ export function mountMemoryGame(container, onSaveScore) {
   const seqNode = container.querySelector("#memory-seq");
   const optionsNode = container.querySelector("#memory-options");
   const roundNode = container.querySelector("#memory-round");
-  const livesNode = container.querySelector("#memory-lives");
   const statusNode = container.querySelector("#memory-status");
-  const difficultyNode = container.querySelector("#memory-difficulty");
 
   function resetBoard() {
     sequence = [];
     userInput = [];
     round = 0;
-    lives = 3;
     acceptingInput = false;
     roundNode.textContent = "0";
-    livesNode.textContent = "3";
     seqNode.innerHTML = "";
     statusNode.textContent = "Press start to begin.";
   }
 
-  function renderSymbol(sym, active) {
+  function flashSymbol(sym, active) {
     return `<div class="shape ${active ? "shape-active" : ""}">${sym}</div>`;
   }
 
   function renderBlankSequence() {
-    seqNode.innerHTML = sequence.map((s) => renderSymbol(s, false)).join("");
+    seqNode.innerHTML = sequence.map((s) => flashSymbol(s, false)).join("");
   }
 
   function sleep(ms) {
@@ -62,10 +49,12 @@ export function mountMemoryGame(container, onSaveScore) {
     statusNode.textContent = "Watch carefully...";
 
     for (let i = 0; i < sequence.length; i += 1) {
-      seqNode.innerHTML = sequence.map((sym, idx) => renderSymbol(sym, idx === i)).join("");
-      await sleep(speed);
+      seqNode.innerHTML = sequence
+        .map((sym, idx) => flashSymbol(sym, idx === i))
+        .join("");
+      await sleep(600);
       renderBlankSequence();
-      await sleep(Math.max(160, speed * 0.4));
+      await sleep(240);
     }
 
     userInput = [];
@@ -81,14 +70,6 @@ export function mountMemoryGame(container, onSaveScore) {
     await playSequence();
   }
 
-  function gameOver() {
-    acceptingInput = false;
-    const finalScore = Math.max(0, round - 1);
-    onSaveScore("Memory", finalScore);
-    alert(`Memory game ended. You reached round ${round}.`);
-    resetBoard();
-  }
-
   function handleInput(sym) {
     if (!acceptingInput || !sequence.length) return;
 
@@ -96,17 +77,10 @@ export function mountMemoryGame(container, onSaveScore) {
     const idx = userInput.length - 1;
 
     if (userInput[idx] !== sequence[idx]) {
-      lives -= 1;
-      livesNode.textContent = String(lives);
       acceptingInput = false;
-      if (lives <= 0) {
-        gameOver();
-      } else {
-        statusNode.textContent = `Not quite! ${lives} lives left. Replaying sequence...`;
-        setTimeout(() => {
-          playSequence();
-        }, 700);
-      }
+      onSaveScore("Memory", Math.max(0, round - 1));
+      alert(`Memory game ended at round ${round}. Great try!`);
+      resetBoard();
       return;
     }
 
@@ -127,9 +101,7 @@ export function mountMemoryGame(container, onSaveScore) {
   });
 
   container.querySelector("#start-memory").addEventListener("click", () => {
-    speed = Number(difficultyNode.value);
     resetBoard();
-    statusNode.textContent = "Memorize the pattern...";
     nextRound();
   });
 }
