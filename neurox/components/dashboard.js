@@ -9,17 +9,31 @@ function moodTrend(logs) {
   return `Recent moods: ${recent.join(" → ")}`;
 }
 
+function leaderboard(scores) {
+  const grouped = new Map();
+  scores.forEach((item) => {
+    const player = item.player || "Guest";
+    grouped.set(player, (grouped.get(player) || 0) + Number(item.score || 0));
+  });
+
+  return [...grouped.entries()]
+    .map(([name, points]) => ({ name, points }))
+    .sort((a, b) => b.points - a.points)
+    .slice(0, 5);
+}
+
 export function renderDashboard(container, store) {
   const gameScores = store.get("gameScores", []);
   const moods = store.get("moodLogs", []);
   const reminderState = store.get("reminders", {});
-  const focusScores = gameScores
-    .filter((item) => item.game === "Focus")
-    .map((item) => item.score);
+  const focusScores = gameScores.filter((item) => item.game === "Focus").map((item) => item.score);
+  const board = leaderboard(gameScores);
+  const profile = store.get("profile", { name: "Guest" });
 
   container.innerHTML = `
     <div class="card">
       <h2>Progress Dashboard</h2>
+      <p class="subtle">Welcome back, <strong>${profile.name}</strong>. Here is your calm productivity snapshot.</p>
       <div class="stat-grid">
         <div class="stat">
           <small>Games Played</small>
@@ -39,6 +53,22 @@ export function renderDashboard(container, store) {
         </div>
       </div>
       <canvas id="progress-chart" width="600" height="220"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>Community Leaderboard</h3>
+      <div class="leaderboard">
+        ${board
+          .map(
+            (entry, idx) => `
+              <div class="leader-row">
+                <strong>#${idx + 1} ${entry.name}</strong>
+                <span>${entry.points} pts</span>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
     </div>
   `;
 

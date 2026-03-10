@@ -226,3 +226,94 @@ select {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.welcome-chip {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.subtle {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.leaderboard {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.leader-row {
+  display: flex;
+  justify-content: space-between;
+  background: #f6f9ff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.8rem;
+}
+
+.shape-active {
+  background: #dff7ee;
+  border-color: var(--secondary);
+  transform: scale(1.05);
+}
+
+.onboarding-row {
+  margin-top: 1rem;
+  max-width: 360px;
+}
+
+.mood-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.checkins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.checkin-box {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem;
+  background: #fff;
+}
+
+.checkin-btn {
+  font-size: 0.9rem;
+}
+
+.xr-card {
+  position: relative;
+  overflow: hidden;
+}
+
+#games-screen.vr-mode .xr-card,
+#games-screen.vr-mode #game-root {
+  background: linear-gradient(120deg, #110d2b, #2f1f64);
+  color: #f2f1ff;
+  border-color: #6f57ff;
+}
+
+#games-screen.ar-mode .xr-card,
+#games-screen.ar-mode #game-root {
+  background: linear-gradient(120deg, #092e2b, #0c5751);
+  color: #e8fffb;
+  border-color: #2dd4bf;
+}
+
+#games-screen.vr-mode #game-root::before,
+#games-screen.ar-mode #game-root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.2) 1px, transparent 0);
+  background-size: 22px 22px;
+  pointer-events: none;
+}
+
+#game-root {
+  position: relative;
+  overflow: hidden;
+}
