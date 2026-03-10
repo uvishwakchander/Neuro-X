@@ -3,34 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeuroX | Mind Arena</title>
+  <title>NeuroX | Neurodiversity Support</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="player-modal" class="modal-overlay active" role="dialog" aria-modal="true" aria-label="Enter player name">
-    <div class="modal-card">
-      <h2>Welcome to NeuroX Mind Arena</h2>
-      <p>Enter your player name to begin your personalized journey.</p>
-      <input id="player-name-input" type="text" placeholder="Enter player name" maxlength="32" />
-      <div class="button-row">
-        <button id="continue-player" class="btn primary">Continue</button>
-      </div>
-      <small class="muted">Tip: Try names like Sanju Samson or Smirthi Madana for sample leaderboard matching.</small>
-    </div>
-  </div>
-
   <header id="app-header"></header>
 
   <main id="app" class="container">
-    <section id="landing-screen" class="screen active card hero">
-      <h1>🧠 NeuroX — Focus, Feel Better, Grow</h1>
+    <section id="landing-screen" class="screen active card">
+      <h1>Welcome to NeuroX</h1>
       <p>
-        A next-gen neurodiversity support experience for ADHD, Autism, Dyslexia and related cognitive profiles.
-        Play brain-friendly games, track mood, get supportive AI nudges, stay on reminders, and monitor progress.
+        NeuroX is a calm, supportive space for people with ADHD, Autism, Dyslexia,
+        and related cognitive conditions. Track your mood, play brain-friendly games,
+        chat with a supportive AI guide, and celebrate progress.
       </p>
-      <div class="button-row">
-        <button id="start-btn" class="btn primary large">Start Mission</button>
-      </div>
+      <button id="start-btn" class="btn primary large">Start NeuroX</button>
     </section>
 
     <section id="dashboard-screen" class="screen hidden">
@@ -46,23 +33,20 @@
         <h2>Quick Access</h2>
         <div class="button-row">
           <button class="btn" data-nav="games-screen">Play Games</button>
-          <button class="btn" data-nav="chat-screen">AI Support</button>
-          <button class="btn" data-nav="reminders-screen">Reminders</button>
-          <button class="btn" data-nav="forum-screen">Forum</button>
+          <button class="btn" data-nav="chat-screen">Open AI Support</button>
+          <button class="btn" data-nav="forum-screen">Community Board</button>
         </div>
       </div>
     </section>
 
     <section id="games-screen" class="screen hidden">
       <div class="card">
-        <h2>Game Arena</h2>
-        <p>Train focus, memory, and pattern recognition with adaptive mini-challenges.</p>
+        <h2>Cognitive Games</h2>
+        <p>Choose a game and build focus, memory, and pattern recognition.</p>
         <div class="button-row">
           <button id="focus-tab" class="btn">Focus Game</button>
           <button id="memory-tab" class="btn">Memory Game</button>
           <button id="pattern-tab" class="btn">Pattern Game</button>
-          <button id="small-tap-tab" class="btn">Speed Tap</button>
-          <button id="small-match-tab" class="btn">Quick Match</button>
         </div>
       </div>
       <div id="game-root" class="card"></div>
@@ -81,7 +65,7 @@
     </section>
   </main>
 
-  <footer class="footer">NeuroX MVP • Static Local-first Mind Arena</footer>
+  <footer class="footer">NeuroX MVP • Local-first support platform</footer>
 
   <script type="module" src="app.js"></script>
 </body>
