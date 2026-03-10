@@ -30,6 +30,25 @@ const moods = [
   { emoji: "😴", label: "Tired", value: 1 },
 ];
 
+const sampleGameScores = [
+  { game: "Focus", score: 7, date: "2026-03-01T09:00:00.000Z", player: "Aarav" },
+  { game: "Memory", score: 4, date: "2026-03-01T09:10:00.000Z", player: "Maya" },
+  { game: "Pattern", score: 6, date: "2026-03-01T09:15:00.000Z", player: "Riya" },
+];
+const sampleMoodLogs = [
+  { date: "2026-03-01T08:00:00.000Z", moodLabel: "Calm", emoji: "😌", value: 4 },
+  { date: "2026-03-02T08:00:00.000Z", moodLabel: "Happy", emoji: "🙂", value: 5 },
+  { date: "2026-03-03T08:00:00.000Z", moodLabel: "Neutral", emoji: "😐", value: 3 },
+];
+
+function ensureSampleData() {
+  if (!store.get("neuroxSeeded", false)) {
+    if (!store.get("gameScores", []).length) store.set("gameScores", sampleGameScores);
+    if (!store.get("moodLogs", []).length) store.set("moodLogs", sampleMoodLogs);
+    store.set("neuroxSeeded", true);
+  }
+}
+
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.add("hidden");
@@ -96,7 +115,8 @@ function initGames() {
   const root = document.getElementById("game-root");
   const saveScore = (game, score) => {
     const scores = store.get("gameScores", []);
-    scores.push({ game, score, date: new Date().toISOString() });
+    const profile = store.get("profile", { name: "Player" });
+    scores.push({ game, score, date: new Date().toISOString(), player: profile.name });
     store.set("gameScores", scores);
     renderDashboard(document.getElementById("dashboard-root"), store);
   };
@@ -114,8 +134,37 @@ function initQuickLinks() {
   });
 }
 
+function initOnboarding() {
+  const startBtn = document.getElementById("start-btn");
+  const nameInput = document.getElementById("player-name");
+  const hint = document.getElementById("player-name-hint");
+
+  const existing = store.get("profile", null);
+  if (existing?.name) {
+    nameInput.value = existing.name;
+    startBtn.textContent = `Continue as ${existing.name}`;
+  }
+
+  startBtn.addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    if (!name) {
+      hint.textContent = "Please enter your name to start your session.";
+      nameInput.focus();
+      return;
+    }
+
+    store.set("profile", { name, startedAt: new Date().toISOString() });
+    renderNavbar(document.getElementById("app-header"), showScreen, name);
+    renderDashboard(document.getElementById("dashboard-root"), store);
+    showScreen("dashboard-screen");
+  });
+}
+
 function init() {
-  renderNavbar(document.getElementById("app-header"), showScreen);
+  ensureSampleData();
+
+  const profile = store.get("profile", { name: "Guest" });
+  renderNavbar(document.getElementById("app-header"), showScreen, profile.name);
   renderDashboard(document.getElementById("dashboard-root"), store);
   renderReminders(document.getElementById("reminders-root"), store);
   renderChat(document.getElementById("chat-root"));
@@ -124,8 +173,7 @@ function init() {
   initMoodCheckin();
   initGames();
   initQuickLinks();
-
-  document.getElementById("start-btn").addEventListener("click", () => showScreen("dashboard-screen"));
+  initOnboarding();
 }
 
 init();
