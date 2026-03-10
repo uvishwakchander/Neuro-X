@@ -45,7 +45,7 @@ function showScreen(id) {
 function drawMoodChart(canvas, logs) {
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "#2ee6b8";
+  ctx.strokeStyle = "#53c9a8";
   ctx.lineWidth = 3;
   ctx.beginPath();
   const points = logs.slice(-10);
@@ -63,7 +63,10 @@ function initMoodCheckin() {
   const moodChart = document.getElementById("mood-chart");
 
   moodButtons.innerHTML = moods
-    .map((mood) => `<button class="mood-btn" data-mood="${mood.label}">${mood.emoji}<br/><small>${mood.label}</small></button>`)
+    .map(
+      (mood) =>
+        `<button class="mood-btn" data-mood="${mood.label}">${mood.emoji}<br/><small>${mood.label}</small></button>`,
+    )
     .join("");
 
   const refresh = () => {
@@ -75,7 +78,12 @@ function initMoodCheckin() {
     btn.addEventListener("click", () => {
       const mood = moods.find((m) => m.label === btn.dataset.mood);
       const logs = store.get("moodLogs", []);
-      logs.push({ date: new Date().toISOString(), moodLabel: mood.label, emoji: mood.emoji, value: mood.value });
+      logs.push({
+        date: new Date().toISOString(),
+        moodLabel: mood.label,
+        emoji: mood.emoji,
+        value: mood.value,
+      });
       store.set("moodLogs", logs);
       refresh();
     });
@@ -88,12 +96,7 @@ function initGames() {
   const root = document.getElementById("game-root");
   const saveScore = (game, score) => {
     const scores = store.get("gameScores", []);
-    scores.push({
-      game,
-      score,
-      player: store.get("playerName", "Guest"),
-      date: new Date().toISOString(),
-    });
+    scores.push({ game, score, date: new Date().toISOString() });
     store.set("gameScores", scores);
     renderDashboard(document.getElementById("dashboard-root"), store);
   };
@@ -101,8 +104,6 @@ function initGames() {
   document.getElementById("focus-tab").addEventListener("click", () => mountFocusGame(root, saveScore));
   document.getElementById("memory-tab").addEventListener("click", () => mountMemoryGame(root, saveScore));
   document.getElementById("pattern-tab").addEventListener("click", () => mountPatternGame(root, saveScore));
-  document.getElementById("small-tap-tab").addEventListener("click", () => mountSmallTapGame(root, saveScore));
-  document.getElementById("small-match-tab").addEventListener("click", () => mountSmallMatchGame(root, saveScore));
 
   mountFocusGame(root, saveScore);
 }
@@ -113,33 +114,8 @@ function initQuickLinks() {
   });
 }
 
-function initPlayerGate() {
-  const modal = document.getElementById("player-modal");
-  const input = document.getElementById("player-name-input");
-  const continueBtn = document.getElementById("continue-player");
-
-  const existing = store.get("playerName", "");
-  if (existing) {
-    modal.classList.remove("active");
-    return existing;
-  }
-
-  continueBtn.addEventListener("click", () => {
-    const value = input.value.trim();
-    if (!value) return;
-    store.set("playerName", value);
-    modal.classList.remove("active");
-    renderNavbar(document.getElementById("app-header"), showScreen, value);
-    initQuickLinks();
-    renderDashboard(document.getElementById("dashboard-root"), store);
-  });
-
-  return "Guest";
-}
-
 function init() {
-  const playerName = initPlayerGate();
-  renderNavbar(document.getElementById("app-header"), showScreen, playerName);
+  renderNavbar(document.getElementById("app-header"), showScreen);
   renderDashboard(document.getElementById("dashboard-root"), store);
   renderReminders(document.getElementById("reminders-root"), store);
   renderChat(document.getElementById("chat-root"));

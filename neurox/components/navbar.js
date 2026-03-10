@@ -1,10 +1,7 @@
-export function renderNavbar(container, onNavigate, playerName) {
+export function renderNavbar(container, onNavigate) {
   container.innerHTML = `
     <nav class="navbar" aria-label="Main navigation">
-      <div>
-        <strong>🧠 NeuroX Mind Arena</strong>
-        <div class="player-badge">Player: ${playerName || "Guest"}</div>
-      </div>
+      <strong>🧠 NeuroX</strong>
       <div class="nav-links">
         <button class="btn" data-nav="dashboard-screen">Dashboard</button>
         <button class="btn" data-nav="games-screen">Games</button>

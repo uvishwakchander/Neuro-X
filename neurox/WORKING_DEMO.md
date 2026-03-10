@@ -18,37 +18,11 @@ Open:
 
 ---
 
-## 1A) Run from Windows CMD (step-by-step)
+## 2) Landing screen (30s)
 
-1. Open **Command Prompt**.
-2. Move to repository folder:
-
-```cmd
-cd /d C:\path\to\Neuro-X
-```
-
-3. Start local server:
-
-```cmd
-python -m http.server 4173 --directory .
-```
-
-4. Open the app:
-
-```cmd
-start http://localhost:4173/neurox/index.html
-```
-
-5. Leave CMD running during demo. Use `Ctrl + C` to stop server after demo.
-
----
-
-## 2) Player sign-in + Landing screen (45s)
-
-1. Enter a player name at open (example: **Sanju Samson**).
-2. Click **Continue** and show player name appears in navbar.
-3. Show the NeuroX intro text and click **Start Mission**.
-4. Explain this is a static, backend-free app storing data in browser LocalStorage.
+1. Show the NeuroX intro text.
+2. Click **Start NeuroX**.
+3. Explain this is a static, backend-free app storing data in browser LocalStorage.
 
 Expected result:
 
