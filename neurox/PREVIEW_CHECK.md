@@ -27,6 +27,12 @@ A Playwright preview pass was run across Landing → Games → Chat → Forum �
 - Games: `neurox-preview-games.png`
 - Dashboard: `neurox-preview-dashboard.png`
 
+## Comment-section check (Forum)
+
+- Created a forum post and added comments.
+- Reloaded the page and verified comments persisted via LocalStorage.
+- Posted HTML-like content and verified comments render as escaped text (no script execution).
+
 ## Additional checks run
 
 - JavaScript syntax check across `neurox/**/*.js` using Node `--check`

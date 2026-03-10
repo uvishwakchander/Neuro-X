@@ -4,6 +4,23 @@ const reminderDefs = [
   { key: "break", label: "Break reminder after 30 min gameplay", intervalMs: 30 * 60 * 1000 },
 ];
 
+const reminderTimers = new Map();
+
+function stopReminderTimer(key) {
+  const timerId = reminderTimers.get(key);
+  if (!timerId) return;
+  clearInterval(timerId);
+  reminderTimers.delete(key);
+}
+
+function startReminderTimer(def) {
+  stopReminderTimer(def.key);
+  const timerId = setInterval(() => {
+    alert(`NeuroX reminder: ${def.label}`);
+  }, def.intervalMs);
+  reminderTimers.set(def.key, timerId);
+}
+
 export function renderReminders(container, store) {
   const state = store.get("reminders", {
     hydration: true,
@@ -22,20 +39,52 @@ export function renderReminders(container, store) {
   `;
 
   const list = container.querySelector("#reminder-list");
+
+  const renderStatus = () => {
+    const activeCount = reminderDefs.filter((def) => Boolean(state[def.key])).length;
+    const status = document.createElement("p");
+    status.className = "subtle";
+    status.textContent = `${activeCount}/${reminderDefs.length} health reminders active`;
+    list.appendChild(status);
+  };
+
   reminderDefs.forEach((reminder) => {
-    const row = document.createElement("label");
+    const row = document.createElement("div");
     row.className = "post";
     row.innerHTML = `
-      <input type="checkbox" data-key="${reminder.key}" ${state[reminder.key] ? "checked" : ""} />
-      ${reminder.label}
+      <label>
+        <input type="checkbox" data-key="${reminder.key}" ${state[reminder.key] ? "checked" : ""} />
+        ${reminder.label}
+      </label>
+      <button class="btn test-reminder" data-key="${reminder.key}">Test now</button>
     `;
     list.appendChild(row);
   });
 
+  renderStatus();
+
   list.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
-      state[checkbox.dataset.key] = checkbox.checked;
+      const key = checkbox.dataset.key;
+      state[key] = checkbox.checked;
       store.set("reminders", state);
+
+      const def = reminderDefs.find((reminder) => reminder.key === key);
+      if (!def) return;
+      if (checkbox.checked) startReminderTimer(def);
+      else stopReminderTimer(key);
+
+      const note = list.querySelector(".subtle");
+      if (note) note.remove();
+      renderStatus();
+    });
+  });
+
+  list.querySelectorAll(".test-reminder").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const def = reminderDefs.find((item) => item.key === btn.dataset.key);
+      if (!def) return;
+      alert(`NeuroX reminder (test): ${def.label}`);
     });
   });
 
@@ -50,9 +99,7 @@ export function renderReminders(container, store) {
   });
 
   reminderDefs.forEach((def) => {
-    if (!state[def.key]) return;
-    setInterval(() => {
-      alert(`NeuroX reminder: ${def.label}`);
-    }, def.intervalMs);
+    if (state[def.key]) startReminderTimer(def);
+    else stopReminderTimer(def.key);
   });
 }

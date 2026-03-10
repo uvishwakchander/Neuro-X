@@ -226,3 +226,39 @@ select {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.welcome-chip {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.subtle {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.leaderboard {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.leader-row {
+  display: flex;
+  justify-content: space-between;
+  background: #f6f9ff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.8rem;
+}
+
+.shape-active {
+  background: #dff7ee;
+  border-color: var(--secondary);
+  transform: scale(1.05);
+}
+
+.onboarding-row {
+  margin-top: 1rem;
+  max-width: 360px;
+}
