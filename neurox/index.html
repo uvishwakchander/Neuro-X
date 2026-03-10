@@ -31,6 +31,10 @@
         <h2>Daily Mood Check-In</h2>
         <div id="mood-buttons" class="mood-grid" aria-label="Select your mood"></div>
         <canvas id="mood-chart" width="600" height="220" aria-label="Mood history chart"></canvas>
+
+        <h3>Other Check-Ins</h3>
+        <div id="other-checkins" class="checkins-grid"></div>
+        <p id="checkin-summary" class="subtle"></p>
       </div>
 
       <div class="card quick-links">
@@ -39,6 +43,7 @@
           <button class="btn" data-nav="games-screen">Play Games</button>
           <button class="btn" data-nav="chat-screen">Open AI Support</button>
           <button class="btn" data-nav="forum-screen">Community Board</button>
+          <button class="btn" data-nav="reminders-screen">Health Reminders</button>
         </div>
       </div>
     </section>
@@ -51,8 +56,21 @@
           <button id="focus-tab" class="btn">Focus Game</button>
           <button id="memory-tab" class="btn">Memory Game</button>
           <button id="pattern-tab" class="btn">Pattern Game</button>
+          <button id="small-tap-tab" class="btn">Speed Tap</button>
+          <button id="small-match-tab" class="btn">Quick Match</button>
         </div>
       </div>
+
+      <div class="card xr-card">
+        <h3>VR-AR Game Layer</h3>
+        <p>Toggle immersive visual layers for a futuristic practice mode.</p>
+        <div class="button-row">
+          <button id="toggle-vr-mode" class="btn">Toggle VR Layer</button>
+          <button id="toggle-ar-mode" class="btn">Toggle AR Layer</button>
+        </div>
+        <p id="xr-state" class="subtle">XR Layer: Off</p>
+      </div>
+
       <div id="game-root" class="card"></div>
     </section>
 
