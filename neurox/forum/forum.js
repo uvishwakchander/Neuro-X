@@ -1,24 +1,59 @@
 const categories = ["ADHD", "Autism", "Dyslexia", "General Support"];
 
+const samplePosts = [
+  {
+    id: 101,
+    title: "What helps me reset between tasks",
+    body: "Short 2-minute breathing breaks and a water sip made my day much smoother.",
+    category: "General Support",
+    likes: 4,
+    comments: ["Love this!", "I use a timer for this too."],
+  },
+  {
+    id: 102,
+    title: "Focus tip for ADHD study sessions",
+    body: "I do 20 mins deep work + 5 mins stretch. It helps me avoid mental overload.",
+    category: "ADHD",
+    likes: 7,
+    comments: ["Pomodoro works for me as well."],
+  },
+];
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function renderPosts(listNode, posts, onLike, onComment) {
   listNode.innerHTML = "";
   posts
     .slice()
     .reverse()
     .forEach((post) => {
+      const safeTitle = escapeHtml(post.title);
+      const safeCategory = escapeHtml(post.category);
+      const safeBody = escapeHtml(post.body);
+      const commentsMarkup = (post.comments || [])
+        .map((comment) => `<p>💬 ${escapeHtml(comment)}</p>`)
+        .join("");
+
       const wrap = document.createElement("article");
       wrap.className = "post";
       wrap.innerHTML = `
-        <h4>${post.title}</h4>
-        <small>${post.category}</small>
-        <p>${post.body}</p>
+        <h4>${safeTitle}</h4>
+        <small>${safeCategory}</small>
+        <p>${safeBody}</p>
         <p>❤️ ${post.likes || 0}</p>
         <button class="btn like-btn" data-id="${post.id}">Like</button>
         <div class="input-row">
           <input placeholder="Add comment" data-cid="${post.id}" />
           <button class="btn comment-btn" data-id="${post.id}">Comment</button>
         </div>
-        <div>${(post.comments || []).map((c) => `<p>💬 ${c}</p>`).join("")}</div>
+        <div>${commentsMarkup}</div>
       `;
       listNode.appendChild(wrap);
     });
@@ -32,6 +67,7 @@ function renderPosts(listNode, posts, onLike, onComment) {
       const comment = input.value.trim();
       if (!comment) return;
       onComment(btn.dataset.id, comment);
+      input.value = "";
     });
   });
 }
@@ -54,6 +90,10 @@ export function renderForum(container, store) {
 
   const getPosts = () => store.get("forumPosts", []);
   const setPosts = (posts) => store.set("forumPosts", posts);
+
+  if (!getPosts().length) {
+    setPosts(samplePosts);
+  }
 
   const rerender = () => {
     renderPosts(

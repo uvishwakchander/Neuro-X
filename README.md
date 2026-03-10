@@ -76,7 +76,15 @@ neurox/
 
 ### Run Locally
 
-Open `neurox/index.html` directly in your browser.
+From repository root:
+
+```bash
+python -m http.server 4173 --directory .
+```
+
+Then open `http://localhost:4173/neurox/`.
+
+For a full walkthrough and verification checklist, see `neurox/DEMO_RUNNING_GUIDE.md`.
 
 ### Deploy to GitHub Pages
 
