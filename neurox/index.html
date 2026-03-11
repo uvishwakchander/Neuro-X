@@ -17,6 +17,10 @@
         and related cognitive conditions. Track your mood, play brain-friendly games,
         chat with a supportive AI guide, and celebrate progress.
       </p>
+      <div class="input-row onboarding-row">
+        <input id="player-name" placeholder="Enter your name" maxlength="40" />
+      </div>
+      <p id="player-name-hint" class="subtle"></p>
       <button id="start-btn" class="btn primary large">Start NeuroX</button>
     </section>
 
@@ -27,6 +31,10 @@
         <h2>Daily Mood Check-In</h2>
         <div id="mood-buttons" class="mood-grid" aria-label="Select your mood"></div>
         <canvas id="mood-chart" width="600" height="220" aria-label="Mood history chart"></canvas>
+
+        <h3>Other Check-Ins</h3>
+        <div id="other-checkins" class="checkins-grid"></div>
+        <p id="checkin-summary" class="subtle"></p>
       </div>
 
       <div class="card quick-links">
@@ -35,6 +43,7 @@
           <button class="btn" data-nav="games-screen">Play Games</button>
           <button class="btn" data-nav="chat-screen">Open AI Support</button>
           <button class="btn" data-nav="forum-screen">Community Board</button>
+          <button class="btn" data-nav="reminders-screen">Health Reminders</button>
         </div>
       </div>
     </section>
@@ -47,9 +56,34 @@
           <button id="focus-tab" class="btn">Focus Game</button>
           <button id="memory-tab" class="btn">Memory Game</button>
           <button id="pattern-tab" class="btn">Pattern Game</button>
+          <button id="small-tap-tab" class="btn">Speed Tap</button>
+          <button id="small-match-tab" class="btn">Quick Match</button>
         </div>
       </div>
-      <div id="game-root" class="card"></div>
+
+      <div class="card xr-card">
+        <h3>VR-AR Game Layer</h3>
+        <p>Toggle immersive visual layers for a futuristic practice mode.</p>
+        <div class="button-row">
+          <button id="toggle-vr-mode" class="btn">Toggle VR Layer</button>
+          <button id="toggle-ar-mode" class="btn">Toggle AR Layer</button>
+        </div>
+        <p id="xr-state" class="subtle">XR Layer: Off</p>
+      </div>
+
+
+
+      <div class="card vr-demo-card">
+        <h3>VR Demo Layer (Therapy View)</h3>
+        <p>Run a lightweight visual breathing scene to preview immersive therapy flow in the browser.</p>
+        <div class="button-row">
+          <button id="start-vr-demo" class="btn primary">Start VR Demo</button>
+          <button id="stop-vr-demo" class="btn">Stop VR Demo</button>
+        </div>
+        <canvas id="vr-demo-canvas" width="900" height="220" aria-label="VR demo visualization"></canvas>
+      </div>
+
+            <div id="game-root" class="card"></div>
     </section>
 
     <section id="chat-screen" class="screen hidden">
