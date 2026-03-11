@@ -76,7 +76,15 @@ neurox/
 
 ### Run Locally
 
-Open `neurox/index.html` directly in your browser.
+From repository root:
+
+```bash
+python -m http.server 4173 --directory .
+```
+
+Then open `http://localhost:4173/neurox/`.
+
+For a full walkthrough and verification checklist, see `neurox/DEMO_RUNNING_GUIDE.md`.
 
 ### Deploy to GitHub Pages
 
@@ -87,3 +95,8 @@ Open `neurox/index.html` directly in your browser.
 5. Save, then access `https://<your-username>.github.io/<repo-name>/neurox/`.
 
 The app stores all MVP data in browser LocalStorage, so no backend services are required.
+
+### Unity VR/AR Therapy Starter
+
+A starter Unity module for VR/AR therapy is available under `neurox/unity_therapy/` with C# scripts and setup notes.
+See `neurox/unity_therapy/README.md` for Unity XR package setup and scene wiring.
