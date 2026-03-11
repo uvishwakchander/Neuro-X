@@ -36,6 +36,7 @@ export function renderReminders(container, store) {
     <div id="reminder-list"></div>
     <p><strong>Hydration streak:</strong> <span id="streak-value">${state.hydrationStreak || 0}</span> days</p>
     <button id="hydrate-now" class="btn primary">I drank water</button>
+    <div id="reminder-feed" class="reminder-feed" aria-live="polite"></div>
   `;
 
   const list = container.querySelector("#reminder-list");
@@ -95,6 +96,7 @@ export function renderReminders(container, store) {
       state.lastHydration = today;
       store.set("reminders", state);
       container.querySelector("#streak-value").textContent = state.hydrationStreak;
+      pushReminderMessage(container, "💧 Hydration streak updated. Great job!");
     }
   });
 
