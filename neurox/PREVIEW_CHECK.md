@@ -1,6 +1,6 @@
 # NeuroX Preview & Error Check
 
-This file records a recent preview run and error validation for the static MVP.
+This file records preview and validation checks for the static MVP.
 
 ## Preview command
 
@@ -14,7 +14,15 @@ Open in browser:
 
 ## Automated preview verification
 
-A Playwright preview pass was run across Landing → Games → Chat → Forum → Dashboard.
+A Playwright validation pass was run across:
+
+- Landing / onboarding
+- Dashboard (stats + wellbeing snapshot + leaderboard)
+- AI Support chat (sample demo conversation)
+- Forum (relevant seeded category posts)
+- Games (Focus, Memory, Pattern, Speed Tap, Quick Match)
+- AR/VR Therapy Game Demo (start/stop)
+- Reminders (notify preview)
 
 ### Result
 
@@ -23,9 +31,7 @@ A Playwright preview pass was run across Landing → Games → Chat → Forum �
 
 ## Captured preview images
 
-- Landing: `neurox-preview-landing.png`
-- Games: `neurox-preview-games.png`
-- Dashboard: `neurox-preview-dashboard.png`
+- End-to-end pass: `neurox-ar-vr-water-chat-reminders.png`
 
 ## Comment-section check (Forum)
 
@@ -35,5 +41,5 @@ A Playwright preview pass was run across Landing → Games → Chat → Forum �
 
 ## Additional checks run
 
-- JavaScript syntax check across `neurox/**/*.js` using Node `--check`
+- JavaScript syntax checks with Node `--check` across core app/components/games files
 - Python test suite with `PYTHONPATH=src pytest -q`

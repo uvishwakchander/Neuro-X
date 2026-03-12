@@ -3,6 +3,15 @@ function average(values) {
   return values.reduce((sum, n) => sum + n, 0) / values.length;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function moodTrend(logs) {
   if (!logs.length) return "No mood data yet";
   const recent = logs.slice(-5).map((log) => log.moodLabel);
@@ -49,7 +58,7 @@ export function renderDashboard(container, store) {
         </div>
         <div class="stat">
           <small>Mood Trend</small>
-          <strong>${moodTrend(moods)}</strong>
+          <strong>${escapeHtml(moodTrend(moods))}</strong>
         </div>
       </div>
       <canvas id="progress-chart" width="600" height="220"></canvas>

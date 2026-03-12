@@ -18,7 +18,13 @@ const store = {
     }
   },
   set(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (err) {
+      console.warn("NeuroX store.set failed", key, err);
+      return false;
+    }
   },
 };
 

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeuroX | Neurodiversity Support</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header id="app-header"></header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroX | Neurodiversity Support</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header id="app-header"></header>
 
   <main id="app" class="container">
     <section id="landing-screen" class="screen active card">
@@ -24,8 +24,16 @@
       <button id="start-btn" class="btn primary large">Start NeuroX</button>
     </section>
 
-    <section id="dashboard-screen" class="screen hidden">
-      <div id="dashboard-root"></div>
+        <div class="card quick-links">
+          <h2>Quick Access</h2>
+          <div class="button-row">
+            <button class="btn" data-nav="games-screen">Play Games</button>
+            <button class="btn" data-nav="chat-screen">Open AI Support</button>
+            <button class="btn" data-nav="forum-screen">Community Board</button>
+            <button class="btn" data-nav="reminders-screen">Health Reminders</button>
+          </div>
+        </div>
+      </section>
 
       <div class="card mood-card">
         <h2>Daily Mood Check-In</h2>
@@ -45,8 +53,6 @@
           <button class="btn" data-nav="forum-screen">Community Board</button>
           <button class="btn" data-nav="reminders-screen">Health Reminders</button>
         </div>
-      </div>
-    </section>
 
     <section id="games-screen" class="screen hidden">
       <div class="card">
@@ -90,21 +96,24 @@
             <div id="game-root" class="card"></div>
     </section>
 
-    <section id="chat-screen" class="screen hidden">
-      <div id="chat-root" class="card"></div>
-    </section>
+        <div id="game-root" class="card"></div>
+      </section>
 
-    <section id="reminders-screen" class="screen hidden">
-      <div id="reminders-root" class="card"></div>
-    </section>
+      <section id="chat-screen" class="screen hidden">
+        <div id="chat-root" class="card"></div>
+      </section>
 
-    <section id="forum-screen" class="screen hidden">
-      <div id="forum-root" class="card"></div>
-    </section>
-  </main>
+      <section id="reminders-screen" class="screen hidden">
+        <div id="reminders-root" class="card"></div>
+      </section>
 
-  <footer class="footer">NeuroX MVP • Local-first support platform</footer>
+      <section id="forum-screen" class="screen hidden">
+        <div id="forum-root" class="card"></div>
+      </section>
+    </main>
 
-  <script type="module" src="app.js"></script>
-</body>
+    <footer class="footer">NeuroX MVP • Local-first support platform</footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
