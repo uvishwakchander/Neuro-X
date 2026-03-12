@@ -1,20 +1,9 @@
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
 export function renderNavbar(container, onNavigate, playerName = "Guest") {
-  const safeName = escapeHtml(playerName || "Guest");
-
   container.innerHTML = `
     <nav class="navbar" aria-label="Main navigation">
       <div>
         <strong>🧠 NeuroX</strong>
-        <div class="welcome-chip">Hi, ${safeName} 👋</div>
+        <div class="welcome-chip">Hi, ${playerName} 👋</div>
       </div>
       <div class="nav-links">
         <button class="btn" data-nav="dashboard-screen">Dashboard</button>

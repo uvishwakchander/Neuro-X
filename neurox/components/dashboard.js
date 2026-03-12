@@ -31,32 +31,18 @@ function leaderboard(scores) {
     .slice(0, 5);
 }
 
-function recentActivity(scores) {
-  return scores
-    .slice()
-    .reverse()
-    .slice(0, 5)
-    .map((item) => {
-      const when = new Date(item.date).toLocaleString();
-      return `${item.player || "Guest"} scored ${item.score} in ${item.game} (${when})`;
-    });
-}
-
 export function renderDashboard(container, store) {
   const gameScores = store.get("gameScores", []);
   const moods = store.get("moodLogs", []);
   const reminderState = store.get("reminders", {});
-  const checkins = store.get("otherCheckins", {});
   const focusScores = gameScores.filter((item) => item.game === "Focus").map((item) => item.score);
   const board = leaderboard(gameScores);
   const profile = store.get("profile", { name: "Guest" });
-  const activity = recentActivity(gameScores);
-  const activeReminderCount = ["hydration", "eyeCare", "break"].filter((k) => reminderState[k]).length;
 
   container.innerHTML = `
     <div class="card">
       <h2>Progress Dashboard</h2>
-      <p class="subtle">Welcome back, <strong>${escapeHtml(profile.name)}</strong>. Here is your calm productivity snapshot.</p>
+      <p class="subtle">Welcome back, <strong>${profile.name}</strong>. Here is your calm productivity snapshot.</p>
       <div class="stat-grid">
         <div class="stat">
           <small>Games Played</small>
@@ -78,24 +64,6 @@ export function renderDashboard(container, store) {
       <canvas id="progress-chart" width="600" height="220"></canvas>
     </div>
 
-    <div class="card two-col-grid">
-      <div>
-        <h3>Wellbeing Snapshot</h3>
-        <div class="post">
-          <p><strong>Active reminders:</strong> ${activeReminderCount}/3</p>
-          <p><strong>Energy:</strong> ${escapeHtml(checkins.energy?.value || "Not set")}</p>
-          <p><strong>Stress:</strong> ${escapeHtml(checkins.stress?.value || "Not set")}</p>
-          <p><strong>Sleep:</strong> ${escapeHtml(checkins.sleep?.value || "Not set")}</p>
-        </div>
-      </div>
-      <div>
-        <h3>Recent Game Activity</h3>
-        <div class="post">
-          ${activity.length ? activity.map((item) => `<p>• ${escapeHtml(item)}</p>`).join("") : "<p>No games played yet.</p>"}
-        </div>
-      </div>
-    </div>
-
     <div class="card">
       <h3>Community Leaderboard</h3>
       <div class="leaderboard">
@@ -103,7 +71,7 @@ export function renderDashboard(container, store) {
           .map(
             (entry, idx) => `
               <div class="leader-row">
-                <strong>#${idx + 1} ${escapeHtml(entry.name)}</strong>
+                <strong>#${idx + 1} ${entry.name}</strong>
                 <span>${entry.points} pts</span>
               </div>
             `,

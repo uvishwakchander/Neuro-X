@@ -13,22 +13,10 @@ function stopReminderTimer(key) {
   reminderTimers.delete(key);
 }
 
-function pushReminderMessage(container, message) {
-  const feed = container.querySelector("#reminder-feed");
-  if (!feed) return;
-  const item = document.createElement("div");
-  item.className = "reminder-toast";
-  item.textContent = message;
-  feed.prepend(item);
-  setTimeout(() => {
-    item.remove();
-  }, 6000);
-}
-
-function startReminderTimer(def, container) {
+function startReminderTimer(def) {
   stopReminderTimer(def.key);
   const timerId = setInterval(() => {
-    pushReminderMessage(container, `⏰ ${def.label}`);
+    alert(`NeuroX reminder: ${def.label}`);
   }, def.intervalMs);
   reminderTimers.set(def.key, timerId);
 }
@@ -56,7 +44,7 @@ export function renderReminders(container, store) {
   const renderStatus = () => {
     const activeCount = reminderDefs.filter((def) => Boolean(state[def.key])).length;
     const status = document.createElement("p");
-    status.className = "subtle reminder-status";
+    status.className = "subtle";
     status.textContent = `${activeCount}/${reminderDefs.length} health reminders active`;
     list.appendChild(status);
   };
@@ -69,7 +57,7 @@ export function renderReminders(container, store) {
         <input type="checkbox" data-key="${reminder.key}" ${state[reminder.key] ? "checked" : ""} />
         ${reminder.label}
       </label>
-      <button class="btn preview-reminder" data-key="${reminder.key}">Notify now</button>
+      <button class="btn test-reminder" data-key="${reminder.key}">Test now</button>
     `;
     list.appendChild(row);
   });
@@ -84,25 +72,20 @@ export function renderReminders(container, store) {
 
       const def = reminderDefs.find((reminder) => reminder.key === key);
       if (!def) return;
-      if (checkbox.checked) {
-        startReminderTimer(def, container);
-        pushReminderMessage(container, `✅ Enabled: ${def.label}`);
-      } else {
-        stopReminderTimer(key);
-        pushReminderMessage(container, `⏸️ Disabled: ${def.label}`);
-      }
+      if (checkbox.checked) startReminderTimer(def);
+      else stopReminderTimer(key);
 
-      const note = list.querySelector(".reminder-status");
+      const note = list.querySelector(".subtle");
       if (note) note.remove();
       renderStatus();
     });
   });
 
-  list.querySelectorAll(".preview-reminder").forEach((btn) => {
+  list.querySelectorAll(".test-reminder").forEach((btn) => {
     btn.addEventListener("click", () => {
       const def = reminderDefs.find((item) => item.key === btn.dataset.key);
       if (!def) return;
-      pushReminderMessage(container, `🔔 Reminder preview: ${def.label}`);
+      alert(`NeuroX reminder (test): ${def.label}`);
     });
   });
 
@@ -118,7 +101,7 @@ export function renderReminders(container, store) {
   });
 
   reminderDefs.forEach((def) => {
-    if (state[def.key]) startReminderTimer(def, container);
+    if (state[def.key]) startReminderTimer(def);
     else stopReminderTimer(def.key);
   });
 }

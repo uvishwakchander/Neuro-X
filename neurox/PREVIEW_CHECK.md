@@ -33,6 +33,12 @@ A Playwright validation pass was run across:
 
 - End-to-end pass: `neurox-ar-vr-water-chat-reminders.png`
 
+## Comment-section check (Forum)
+
+- Created a forum post and added comments.
+- Reloaded the page and verified comments persisted via LocalStorage.
+- Posted HTML-like content and verified comments render as escaped text (no script execution).
+
 ## Additional checks run
 
 - JavaScript syntax checks with Node `--check` across core app/components/games files

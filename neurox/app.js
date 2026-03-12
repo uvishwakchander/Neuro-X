@@ -36,12 +36,6 @@ const moods = [
   { emoji: "😴", label: "Tired", value: 1 },
 ];
 
-const checkIns = [
-  { key: "energy", label: "Energy Check-In", options: ["Low", "Okay", "High"] },
-  { key: "stress", label: "Stress Check-In", options: ["Calm", "Manageable", "High"] },
-  { key: "sleep", label: "Sleep Quality", options: ["Poor", "Average", "Good"] },
-];
-
 const sampleGameScores = [
   { game: "Focus", score: 7, date: "2026-03-01T09:00:00.000Z", player: "Aarav" },
   { game: "Memory", score: 4, date: "2026-03-01T09:10:00.000Z", player: "Maya" },
@@ -59,15 +53,6 @@ function ensureSampleData() {
     if (!store.get("moodLogs", []).length) store.set("moodLogs", sampleMoodLogs);
     store.set("neuroxSeeded", true);
   }
-}
-
-
-function sanitizeName(value) {
-  const compact = String(value || "")
-    .replaceAll(/\s+/g, " ")
-    .trim()
-    .slice(0, 40);
-  return compact || "Guest";
 }
 
 function showScreen(id) {
@@ -318,18 +303,14 @@ function initOnboarding() {
   }
 
   startBtn.addEventListener("click", () => {
-    const name = sanitizeName(nameInput.value);
-    if (name === "Guest") {
+    const name = nameInput.value.trim();
+    if (!name) {
       hint.textContent = "Please enter your name to start your session.";
       nameInput.focus();
       return;
     }
 
-    const saved = store.set("profile", { name, startedAt: new Date().toISOString() });
-    if (!saved) {
-      hint.textContent = "Unable to save profile locally. Please free browser storage and try again.";
-      return;
-    }
+    store.set("profile", { name, startedAt: new Date().toISOString() });
     renderNavbar(document.getElementById("app-header"), showScreen, name);
     renderDashboard(document.getElementById("dashboard-root"), store);
     showScreen("dashboard-screen");
