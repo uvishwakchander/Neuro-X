@@ -1,72 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeuroX | Neurodiversity Support</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header id="app-header"></header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroX | Neurodiversity Support</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header id="app-header"></header>
 
-  <main id="app" class="container">
-    <section id="landing-screen" class="screen active card">
-      <h1>Welcome to NeuroX</h1>
-      <p>
-        NeuroX is a calm, supportive space for people with ADHD, Autism, Dyslexia,
-        and related cognitive conditions. Track your mood, play brain-friendly games,
-        chat with a supportive AI guide, and celebrate progress.
-      </p>
-      <button id="start-btn" class="btn primary large">Start NeuroX</button>
-    </section>
-
-    <section id="dashboard-screen" class="screen hidden">
-      <div id="dashboard-root"></div>
-
-      <div class="card mood-card">
-        <h2>Daily Mood Check-In</h2>
-        <div id="mood-buttons" class="mood-grid" aria-label="Select your mood"></div>
-        <canvas id="mood-chart" width="600" height="220" aria-label="Mood history chart"></canvas>
-      </div>
-
-      <div class="card quick-links">
-        <h2>Quick Access</h2>
-        <div class="button-row">
-          <button class="btn" data-nav="games-screen">Play Games</button>
-          <button class="btn" data-nav="chat-screen">Open AI Support</button>
-          <button class="btn" data-nav="forum-screen">Community Board</button>
+    <main id="app" class="container">
+      <section id="landing-screen" class="screen active card">
+        <h1>Welcome to NeuroX</h1>
+        <p>
+          NeuroX is a calm, supportive space for people with ADHD, Autism, Dyslexia,
+          and related cognitive conditions. Track your mood, play brain-friendly games,
+          chat with a supportive AI guide, and celebrate progress.
+        </p>
+        <div class="input-row onboarding-row">
+          <input id="player-name" placeholder="Enter your name" maxlength="40" />
         </div>
-      </div>
-    </section>
+        <p id="player-name-hint" class="subtle"></p>
+        <button id="start-btn" class="btn primary large">Start NeuroX</button>
+      </section>
 
-    <section id="games-screen" class="screen hidden">
-      <div class="card">
-        <h2>Cognitive Games</h2>
-        <p>Choose a game and build focus, memory, and pattern recognition.</p>
-        <div class="button-row">
-          <button id="focus-tab" class="btn">Focus Game</button>
-          <button id="memory-tab" class="btn">Memory Game</button>
-          <button id="pattern-tab" class="btn">Pattern Game</button>
+      <section id="dashboard-screen" class="screen hidden">
+        <div id="dashboard-root"></div>
+
+        <div class="card mood-card">
+          <h2>Daily Mood Check-In</h2>
+          <div id="mood-buttons" class="mood-grid" aria-label="Select your mood"></div>
+          <canvas id="mood-chart" width="600" height="220" aria-label="Mood history chart"></canvas>
+
+          <h3>Other Check-Ins</h3>
+          <div id="other-checkins" class="checkins-grid"></div>
+          <p id="checkin-summary" class="subtle"></p>
         </div>
-      </div>
-      <div id="game-root" class="card"></div>
-    </section>
 
-    <section id="chat-screen" class="screen hidden">
-      <div id="chat-root" class="card"></div>
-    </section>
+        <div class="card quick-links">
+          <h2>Quick Access</h2>
+          <div class="button-row">
+            <button class="btn" data-nav="games-screen">Play Games</button>
+            <button class="btn" data-nav="chat-screen">Open AI Support</button>
+            <button class="btn" data-nav="forum-screen">Community Board</button>
+            <button class="btn" data-nav="reminders-screen">Health Reminders</button>
+          </div>
+        </div>
+      </section>
 
-    <section id="reminders-screen" class="screen hidden">
-      <div id="reminders-root" class="card"></div>
-    </section>
+      <section id="games-screen" class="screen hidden">
+        <div class="card">
+          <h2>Cognitive Games</h2>
+          <p>Choose a game and build focus, memory, and pattern recognition.</p>
+          <div class="button-row">
+            <button id="focus-tab" class="btn">Focus Game</button>
+            <button id="memory-tab" class="btn">Memory Game</button>
+            <button id="pattern-tab" class="btn">Pattern Game</button>
+            <button id="small-tap-tab" class="btn">Speed Tap</button>
+            <button id="small-match-tab" class="btn">Quick Match</button>
+          </div>
+        </div>
 
-    <section id="forum-screen" class="screen hidden">
-      <div id="forum-root" class="card"></div>
-    </section>
-  </main>
+        <div class="card xr-card">
+          <h3>VR-AR Game Layer</h3>
+          <p>Toggle immersive visual layers for a futuristic practice mode.</p>
+          <div class="button-row">
+            <button id="toggle-vr-mode" class="btn">Toggle VR Layer</button>
+            <button id="toggle-ar-mode" class="btn">Toggle AR Layer</button>
+          </div>
+          <p id="xr-state" class="subtle">XR Layer: Off</p>
+        </div>
 
-  <footer class="footer">NeuroX MVP • Local-first support platform</footer>
+        <div class="card vr-demo-card">
+          <h3>AR/VR Therapy Game Demo</h3>
+          <p>
+            Run a lightweight visual breathing scene with calm water visuals to preview
+            immersive therapy flow in the browser.
+          </p>
+          <div class="button-row">
+            <button id="start-vr-demo" class="btn primary">Start VR Demo</button>
+            <button id="stop-vr-demo" class="btn">Stop VR Demo</button>
+          </div>
+          <div class="water-strip" aria-label="Calm water running images">
+            <img src="assets/calm-water-1.svg" alt="Calm flowing water scene 1" />
+            <img src="assets/calm-water-2.svg" alt="Calm flowing water scene 2" />
+          </div>
+          <canvas id="vr-demo-canvas" width="900" height="220" aria-label="VR demo visualization"></canvas>
+        </div>
 
-  <script type="module" src="app.js"></script>
-</body>
+        <div id="game-root" class="card"></div>
+      </section>
+
+      <section id="chat-screen" class="screen hidden">
+        <div id="chat-root" class="card"></div>
+      </section>
+
+      <section id="reminders-screen" class="screen hidden">
+        <div id="reminders-root" class="card"></div>
+      </section>
+
+      <section id="forum-screen" class="screen hidden">
+        <div id="forum-root" class="card"></div>
+      </section>
+    </main>
+
+    <footer class="footer">NeuroX MVP • Local-first support platform</footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
