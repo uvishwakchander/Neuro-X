@@ -75,6 +75,7 @@ function renderPosts(listNode, posts, onLike, onComment) {
 export function renderForum(container, store) {
   container.innerHTML = `
     <h2>Community Discussion Board</h2>
+    <p class="subtle">Discuss practical strategies for ADHD, Autism, Dyslexia, and general wellbeing support.</p>
     <div class="post">
       <input id="forum-title" placeholder="Post title" />
       <textarea id="forum-body" placeholder="Share your experience or support tips"></textarea>

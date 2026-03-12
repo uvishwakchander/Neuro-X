@@ -1,4 +1,4 @@
-const symbols = ["🔺", "🔵", "🟩", "⭐"];
+const symbols = ["🔺", "🔵", "🟩", "⭐", "🟣", "🟧"];
 
 export function mountMemoryGame(container, onSaveScore) {
   let sequence = [];

@@ -34,11 +34,26 @@ export function renderChat(container) {
     chatBox.scrollTop = chatBox.scrollHeight;
   };
 
-  container.querySelector("#send-chat").addEventListener("click", () => {
+  const demoConversation = [
+    { who: "bot", text: "Hi! I’m NeuroX AI. I can help with calm breathing, focus plans, or break reminders." },
+    { who: "user", text: "I feel anxious before meetings." },
+    {
+      who: "bot",
+      text: "Thanks for sharing. Try a 4-4-6 breathing cycle and review one meeting goal. You’re not alone in this.",
+    },
+  ];
+  demoConversation.forEach((item) => addMessage(item.who, item.text));
+
+  const sendMessage = () => {
     const text = input.value.trim();
     if (!text) return;
     addMessage("user", text);
     addMessage("bot", getBotReply(text));
     input.value = "";
+  };
+
+  container.querySelector("#send-chat").addEventListener("click", sendMessage);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") sendMessage();
   });
 }
