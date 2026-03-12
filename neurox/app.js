@@ -30,12 +30,6 @@ const moods = [
   { emoji: "😴", label: "Tired", value: 1 },
 ];
 
-const checkIns = [
-  { key: "energy", label: "Energy Check-In", options: ["Low", "Okay", "High"] },
-  { key: "stress", label: "Stress Check-In", options: ["Calm", "Manageable", "High"] },
-  { key: "sleep", label: "Sleep Quality", options: ["Poor", "Average", "Good"] },
-];
-
 const sampleGameScores = [
   { game: "Focus", score: 7, date: "2026-03-01T09:00:00.000Z", player: "Aarav" },
   { game: "Memory", score: 4, date: "2026-03-01T09:10:00.000Z", player: "Maya" },

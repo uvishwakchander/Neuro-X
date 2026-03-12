@@ -3,27 +3,19 @@ const categories = ["ADHD", "Autism", "Dyslexia", "General Support"];
 const samplePosts = [
   {
     id: 101,
-    title: "ADHD: 25-minute focus sprint routine",
-    body: "I use 25 mins focus + 5 mins stretch/water. It reduced task switching fatigue for me.",
-    category: "ADHD",
-    likes: 9,
-    comments: ["Same here, the breaks matter a lot.", "I pair this with noise-cancelling headphones."],
+    title: "What helps me reset between tasks",
+    body: "Short 2-minute breathing breaks and a water sip made my day much smoother.",
+    category: "General Support",
+    likes: 4,
+    comments: ["Love this!", "I use a timer for this too."],
   },
   {
     id: 102,
-    title: "Autism-friendly meeting prep",
-    body: "Asking for agenda notes early helps me process discussions and lowers meeting stress.",
-    category: "Autism",
-    likes: 6,
-    comments: ["Pre-reads changed everything for me."],
-  },
-  {
-    id: 103,
-    title: "Dyslexia support tools that worked",
-    body: "OpenDyslexic font + text-to-speech helped me review long docs without burnout.",
-    category: "Dyslexia",
-    likes: 5,
-    comments: ["Text-to-speech is a lifesaver for me too."],
+    title: "Focus tip for ADHD study sessions",
+    body: "I do 20 mins deep work + 5 mins stretch. It helps me avoid mental overload.",
+    category: "ADHD",
+    likes: 7,
+    comments: ["Pomodoro works for me as well."],
   },
 ];
 

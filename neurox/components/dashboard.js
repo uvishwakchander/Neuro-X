@@ -22,27 +22,13 @@ function leaderboard(scores) {
     .slice(0, 5);
 }
 
-function recentActivity(scores) {
-  return scores
-    .slice()
-    .reverse()
-    .slice(0, 5)
-    .map((item) => {
-      const when = new Date(item.date).toLocaleString();
-      return `${item.player || "Guest"} scored ${item.score} in ${item.game} (${when})`;
-    });
-}
-
 export function renderDashboard(container, store) {
   const gameScores = store.get("gameScores", []);
   const moods = store.get("moodLogs", []);
   const reminderState = store.get("reminders", {});
-  const checkins = store.get("otherCheckins", {});
   const focusScores = gameScores.filter((item) => item.game === "Focus").map((item) => item.score);
   const board = leaderboard(gameScores);
   const profile = store.get("profile", { name: "Guest" });
-  const activity = recentActivity(gameScores);
-  const activeReminderCount = ["hydration", "eyeCare", "break"].filter((k) => reminderState[k]).length;
 
   container.innerHTML = `
     <div class="card">
@@ -67,24 +53,6 @@ export function renderDashboard(container, store) {
         </div>
       </div>
       <canvas id="progress-chart" width="600" height="220"></canvas>
-    </div>
-
-    <div class="card two-col-grid">
-      <div>
-        <h3>Wellbeing Snapshot</h3>
-        <div class="post">
-          <p><strong>Active reminders:</strong> ${activeReminderCount}/3</p>
-          <p><strong>Energy:</strong> ${checkins.energy?.value || "Not set"}</p>
-          <p><strong>Stress:</strong> ${checkins.stress?.value || "Not set"}</p>
-          <p><strong>Sleep:</strong> ${checkins.sleep?.value || "Not set"}</p>
-        </div>
-      </div>
-      <div>
-        <h3>Recent Game Activity</h3>
-        <div class="post">
-          ${activity.length ? activity.map((item) => `<p>• ${item}</p>`).join("") : "<p>No games played yet.</p>"}
-        </div>
-      </div>
     </div>
 
     <div class="card">
