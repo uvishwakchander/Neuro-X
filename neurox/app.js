@@ -30,6 +30,31 @@ const moods = [
   { emoji: "😴", label: "Tired", value: 1 },
 ];
 
+const checkIns = [
+  { key: "energy", label: "Energy Check-In", options: ["Low", "Okay", "High"] },
+  { key: "stress", label: "Stress Check-In", options: ["Calm", "Manageable", "High"] },
+  { key: "sleep", label: "Sleep Quality", options: ["Poor", "Average", "Good"] },
+];
+
+const sampleGameScores = [
+  { game: "Focus", score: 7, date: "2026-03-01T09:00:00.000Z", player: "Aarav" },
+  { game: "Memory", score: 4, date: "2026-03-01T09:10:00.000Z", player: "Maya" },
+  { game: "Pattern", score: 6, date: "2026-03-01T09:15:00.000Z", player: "Riya" },
+];
+const sampleMoodLogs = [
+  { date: "2026-03-01T08:00:00.000Z", moodLabel: "Calm", emoji: "😌", value: 4 },
+  { date: "2026-03-02T08:00:00.000Z", moodLabel: "Happy", emoji: "🙂", value: 5 },
+  { date: "2026-03-03T08:00:00.000Z", moodLabel: "Neutral", emoji: "😐", value: 3 },
+];
+
+function ensureSampleData() {
+  if (!store.get("neuroxSeeded", false)) {
+    if (!store.get("gameScores", []).length) store.set("gameScores", sampleGameScores);
+    if (!store.get("moodLogs", []).length) store.set("moodLogs", sampleMoodLogs);
+    store.set("neuroxSeeded", true);
+  }
+}
+
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.add("hidden");
@@ -61,6 +86,8 @@ function drawMoodChart(canvas, logs) {
 function initMoodCheckin() {
   const moodButtons = document.getElementById("mood-buttons");
   const moodChart = document.getElementById("mood-chart");
+  const otherCheckinNode = document.getElementById("other-checkins");
+  const checkinSummary = document.getElementById("checkin-summary");
 
   moodButtons.innerHTML = moods
     .map(
@@ -69,8 +96,31 @@ function initMoodCheckin() {
     )
     .join("");
 
+  otherCheckinNode.innerHTML = checkIns
+    .map(
+      (item) => `
+      <div class="checkin-box">
+        <strong>${item.label}</strong>
+        <div class="button-row">
+          ${item.options
+            .map(
+              (option) =>
+                `<button class="btn checkin-btn" data-checkin="${item.key}" data-value="${option}">${option}</button>`,
+            )
+            .join("")}
+        </div>
+      </div>
+    `,
+    )
+    .join("");
+
   const refresh = () => {
     drawMoodChart(moodChart, store.get("moodLogs", []));
+    const latest = store.get("otherCheckins", {});
+    const summary = checkIns
+      .map((item) => `${item.label}: ${latest[item.key]?.value || "Not set"}`)
+      .join(" | ");
+    checkinSummary.textContent = summary;
     renderDashboard(document.getElementById("dashboard-root"), store);
   };
 
@@ -89,14 +139,30 @@ function initMoodCheckin() {
     });
   });
 
+  otherCheckinNode.querySelectorAll(".checkin-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const checks = store.get("otherCheckins", {});
+      checks[btn.dataset.checkin] = {
+        value: btn.dataset.value,
+        date: new Date().toISOString(),
+      };
+      store.set("otherCheckins", checks);
+      refresh();
+    });
+  });
+
   refresh();
 }
 
 function initGames() {
   const root = document.getElementById("game-root");
+  const gameScreen = document.getElementById("games-screen");
+  const arStateNode = document.getElementById("xr-state");
+
   const saveScore = (game, score) => {
     const scores = store.get("gameScores", []);
-    scores.push({ game, score, date: new Date().toISOString() });
+    const profile = store.get("profile", { name: "Player" });
+    scores.push({ game, score, date: new Date().toISOString(), player: profile.name });
     store.set("gameScores", scores);
     renderDashboard(document.getElementById("dashboard-root"), store);
   };
@@ -104,8 +170,119 @@ function initGames() {
   document.getElementById("focus-tab").addEventListener("click", () => mountFocusGame(root, saveScore));
   document.getElementById("memory-tab").addEventListener("click", () => mountMemoryGame(root, saveScore));
   document.getElementById("pattern-tab").addEventListener("click", () => mountPatternGame(root, saveScore));
+  document.getElementById("small-tap-tab").addEventListener("click", () => mountSmallTapGame(root, saveScore));
+  document.getElementById("small-match-tab").addEventListener("click", () => mountSmallMatchGame(root, saveScore));
 
+  const updateXrLabel = () => {
+    const isVr = gameScreen.classList.contains("vr-mode");
+    const isAr = gameScreen.classList.contains("ar-mode");
+    arStateNode.textContent = `XR Layer: ${isVr ? "VR" : isAr ? "AR" : "Off"}`;
+  };
+
+  document.getElementById("toggle-vr-mode").addEventListener("click", () => {
+    gameScreen.classList.toggle("vr-mode");
+    if (gameScreen.classList.contains("vr-mode")) gameScreen.classList.remove("ar-mode");
+    updateXrLabel();
+  });
+
+  document.getElementById("toggle-ar-mode").addEventListener("click", () => {
+    gameScreen.classList.toggle("ar-mode");
+    if (gameScreen.classList.contains("ar-mode")) gameScreen.classList.remove("vr-mode");
+    updateXrLabel();
+  });
+
+  updateXrLabel();
   mountFocusGame(root, saveScore);
+}
+
+
+function initVrDemoLayer() {
+  const canvas = document.getElementById("vr-demo-canvas");
+  const startBtn = document.getElementById("start-vr-demo");
+  const stopBtn = document.getElementById("stop-vr-demo");
+  if (!canvas || !startBtn || !stopBtn) return;
+
+  const ctx = canvas.getContext("2d");
+  let rafId = null;
+  let phase = 0;
+
+  const waterImages = [new Image(), new Image()];
+  waterImages[0].src = "assets/calm-water-1.svg";
+  waterImages[1].src = "assets/calm-water-2.svg";
+
+  const particles = Array.from({ length: 24 }, (_, i) => ({
+    angle: (Math.PI * 2 * i) / 24,
+    speed: 0.003 + (i % 7) * 0.0004,
+    radius: 45 + (i % 5) * 12,
+  }));
+
+  const draw = () => {
+    phase += 0.018;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const breath = 40 + Math.sin(phase) * 22;
+
+    const grad = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, 140);
+    grad.addColorStop(0, "rgba(83, 201, 168, 0.9)");
+    grad.addColorStop(1, "rgba(79, 124, 255, 0.12)");
+
+    const waterFrame = Math.floor((phase * 10) % 2);
+    const frame = waterImages[waterFrame];
+    if (frame.complete) {
+      ctx.globalAlpha = 0.35;
+      ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, breath + 30, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(255,255,255,0.8)";
+    particles.forEach((p) => {
+      p.angle += p.speed;
+      const x = centerX + Math.cos(p.angle + phase * 0.35) * (p.radius + breath * 0.25);
+      const y = centerY + Math.sin(p.angle + phase * 0.35) * (p.radius + breath * 0.25);
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.strokeStyle = "rgba(180, 235, 255, 0.7)";
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 3; i += 1) {
+      ctx.beginPath();
+      for (let x = 0; x <= canvas.width; x += 12) {
+        const y = centerY + 40 + i * 18 + Math.sin((x * 0.02) + phase * 1.5 + i) * 4;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "rgba(255,255,255,0.95)";
+    ctx.font = "bold 18px Inter, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Breathe in • Hold • Breathe out", centerX, centerY + 6);
+
+    rafId = requestAnimationFrame(draw);
+  };
+
+  const stop = () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+
+  startBtn.addEventListener("click", () => {
+    if (rafId) cancelAnimationFrame(rafId);
+    draw();
+  });
+
+  stopBtn.addEventListener("click", stop);
 }
 
 function initQuickLinks() {
@@ -114,8 +291,37 @@ function initQuickLinks() {
   });
 }
 
+function initOnboarding() {
+  const startBtn = document.getElementById("start-btn");
+  const nameInput = document.getElementById("player-name");
+  const hint = document.getElementById("player-name-hint");
+
+  const existing = store.get("profile", null);
+  if (existing?.name) {
+    nameInput.value = existing.name;
+    startBtn.textContent = `Continue as ${existing.name}`;
+  }
+
+  startBtn.addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    if (!name) {
+      hint.textContent = "Please enter your name to start your session.";
+      nameInput.focus();
+      return;
+    }
+
+    store.set("profile", { name, startedAt: new Date().toISOString() });
+    renderNavbar(document.getElementById("app-header"), showScreen, name);
+    renderDashboard(document.getElementById("dashboard-root"), store);
+    showScreen("dashboard-screen");
+  });
+}
+
 function init() {
-  renderNavbar(document.getElementById("app-header"), showScreen);
+  ensureSampleData();
+
+  const profile = store.get("profile", { name: "Guest" });
+  renderNavbar(document.getElementById("app-header"), showScreen, profile.name);
   renderDashboard(document.getElementById("dashboard-root"), store);
   renderReminders(document.getElementById("reminders-root"), store);
   renderChat(document.getElementById("chat-root"));
@@ -123,9 +329,9 @@ function init() {
 
   initMoodCheckin();
   initGames();
+  initVrDemoLayer();
   initQuickLinks();
-
-  document.getElementById("start-btn").addEventListener("click", () => showScreen("dashboard-screen"));
+  initOnboarding();
 }
 
 init();
